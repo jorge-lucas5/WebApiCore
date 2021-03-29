@@ -7,6 +7,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Estudos.App.Data", "src\Est
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Estudos.App.Business", "src\Estudos.App.Business\Estudos.App.Business.csproj", "{4B64E521-E8A6-4C5E-832F-5870319E437D}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Estudos.App.WebApi", "src\Estudos.App.WebApi\Estudos.App.WebApi.csproj", "{56A5BF6E-E850-45F0-B91B-CB6E03617460}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{4B64E521-E8A6-4C5E-832F-5870319E437D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4B64E521-E8A6-4C5E-832F-5870319E437D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4B64E521-E8A6-4C5E-832F-5870319E437D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{56A5BF6E-E850-45F0-B91B-CB6E03617460}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{56A5BF6E-E850-45F0-B91B-CB6E03617460}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{56A5BF6E-E850-45F0-B91B-CB6E03617460}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{56A5BF6E-E850-45F0-B91B-CB6E03617460}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
