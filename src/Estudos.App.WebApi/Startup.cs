@@ -23,7 +23,7 @@ namespace Estudos.App.WebApi
             services.AddDbContext<AppDbContext>(opt =>
             {
                 opt.UseSqlServer(Configuration.GetConnectionString("WebApiDbConnection"));
-            })
+            });
 
             services.AddAutoMapper(typeof(Startup));
             services.AddControllers();
