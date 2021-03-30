@@ -5,7 +5,10 @@ namespace Estudos.App.WebApi.ViewModels
 {
     public class ProdutoViewModel
     {
-
+        public ProdutoViewModel()
+        {
+            DataCadastro = DateTime.Now;
+        }
         [Key]
         public Guid Id { get; set; }
 
