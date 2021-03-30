@@ -34,6 +34,15 @@ namespace Estudos.App.WebApi
                 opt.SuppressModelStateInvalidFilter = true;
             });
 
+            services.AddCors(opt =>
+            {
+                opt.AddPolicy("Development",
+                    builder => builder.AllowAnyOrigin()
+                                                  .AllowAnyMethod()
+                                                  .AllowAnyHeader()
+                                                  );
+            });
+
             services.ResolveDependecies();
         }
 
@@ -49,6 +58,8 @@ namespace Estudos.App.WebApi
             app.UseRouting();
 
             app.UseAuthorization();
+
+            app.UseCors("Development");
 
             app.UseEndpoints(endpoints =>
             {
