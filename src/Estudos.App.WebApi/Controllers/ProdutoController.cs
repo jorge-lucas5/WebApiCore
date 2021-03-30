@@ -10,7 +10,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Estudos.App.WebApi.Controllers
 {
-    [Microsoft.AspNetCore.Components.Route("api/[controller]")]
+    [Route("api/[controller]")]
     public class ProdutoController : MainController
     {
         private readonly IProdutoRepository _produtoRepository;
@@ -50,7 +50,12 @@ namespace Estudos.App.WebApi.Controllers
             if (!ModelState.IsValid) return CustonResponse(ModelState);
 
             var imgNome = Guid.NewGuid() + "_" + viewModel.Imagem;
+            if (!await UploadArquivo(viewModel.ImagemUpload, imgNome))
+            {
+                return CustonResponse();
+            }
 
+            viewModel.Imagem = imgNome;
             var produto = _mapper.Map<Produto>(viewModel);
             await _produtoService.Adicionar(produto);
 
@@ -89,7 +94,7 @@ namespace Estudos.App.WebApi.Controllers
             }
             var imagemDataByteArray = Convert.FromBase64String(arquivo);
 
-            var filePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/uploadImages", imgNome);
+            var filePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/app/demo-webapi/src/assets", imgNome);
             if (System.IO.File.Exists(filePath))
             {
                 NotificarErro("Já existem um arquivo com esse nome cadastrado!");
