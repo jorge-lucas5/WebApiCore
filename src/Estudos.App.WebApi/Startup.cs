@@ -2,6 +2,7 @@ using Estudos.App.Data.Context;
 using Estudos.App.WebApi.Configuration;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -27,6 +28,11 @@ namespace Estudos.App.WebApi
 
             services.AddAutoMapper(typeof(Startup));
             services.AddControllers();
+
+            services.Configure<ApiBehaviorOptions>(opt =>
+            {
+                opt.SuppressModelStateInvalidFilter = true;
+            });
 
             services.ResolveDependecies();
         }
