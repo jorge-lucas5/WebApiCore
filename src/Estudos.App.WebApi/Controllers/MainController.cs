@@ -22,7 +22,7 @@ namespace Estudos.App.WebApi.Controllers
             return CustonResponse();
         }
 
-        private ActionResult CustonResponse(object result = null)
+        protected ActionResult CustonResponse(object result = null)
         {
             if (OperacaoValida())
             {

@@ -16,7 +16,9 @@ namespace Estudos.App.WebApi.Controllers
         private readonly IFornecedorService _fornecedorService;
         private readonly IMapper _mapper;
 
-        public FornecedorController(IFornecedorRepository fornecedorRepository, IMapper mapper, IFornecedorService fornecedorService)
+        public FornecedorController(IFornecedorRepository fornecedorRepository,
+                                    IMapper mapper, IFornecedorService fornecedorService,
+                                    INotificador notificador) : base(notificador)
         {
             _fornecedorRepository = fornecedorRepository;
             _mapper = mapper;
@@ -44,43 +46,44 @@ namespace Estudos.App.WebApi.Controllers
         [HttpPost]
         public async Task<ActionResult<FornecedorViewModel>> Adicionar(FornecedorViewModel viewModel)
         {
-            if (!ModelState.IsValid) return BadRequest();
+            if (!ModelState.IsValid) return CustonResponse(ModelState);
 
             var fornecedor = _mapper.Map<Fornecedor>(viewModel);
             await _fornecedorService.Adicionar(fornecedor);
-            viewModel.Id = fornecedor.Id;
 
-
-            return Ok(viewModel);
+            return CustonResponse(_mapper.Map<FornecedorViewModel>(fornecedor));
 
         }
 
         [HttpPut("{id:guid}")]
         public async Task<ActionResult<FornecedorViewModel>> Atualizar(Guid id, FornecedorViewModel viewModel)
         {
-            if (id != viewModel.Id) return BadRequest();
+            if (id != viewModel.Id)
+            {
+                NotificarErro("O id informado não é o mesmo passado na query");
+                return CustonResponse();
+            }
 
             if (!ModelState.IsValid) return BadRequest();
 
             var fornecedor = _mapper.Map<Fornecedor>(viewModel);
-            await _fornecedorService.Adicionar(fornecedor);
+            await _fornecedorService.Atualizar(fornecedor);
 
-            return Ok(viewModel);
+            return CustonResponse(viewModel);
 
         }
-
-
 
         [HttpDelete("{id:guid}")]
         public async Task<ActionResult<FornecedorViewModel>> Excluir(Guid id)
         {
             var fornecedor = await _fornecedorRepository.ObterPorId(id);
-            if (fornecedor == null) return BadRequest();
+            if (fornecedor == null) return NotFound();
 
             await _fornecedorService.Remover(id);
 
             var viewModel = _mapper.Map<FornecedorViewModel>(fornecedor);
-            return Ok(viewModel);
+
+            return CustonResponse(viewModel);
 
         }
         #region private
