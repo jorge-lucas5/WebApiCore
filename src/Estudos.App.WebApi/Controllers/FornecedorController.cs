@@ -13,23 +13,28 @@ namespace Estudos.App.WebApi.Controllers
     public class FornecedorController : MainController
     {
         private readonly IFornecedorRepository _fornecedorRepository;
+        private readonly IEnderecoRepository _enderecoRepository;
         private readonly IFornecedorService _fornecedorService;
         private readonly IMapper _mapper;
 
         public FornecedorController(IFornecedorRepository fornecedorRepository,
                                     IMapper mapper, IFornecedorService fornecedorService,
-                                    INotificador notificador) : base(notificador)
+                                    INotificador notificador,
+                                    IEnderecoRepository enderecoRepository) : base(notificador)
         {
             _fornecedorRepository = fornecedorRepository;
             _mapper = mapper;
             _fornecedorService = fornecedorService;
+            _enderecoRepository = enderecoRepository;
         }
 
+        #region verbos
+
         [HttpGet]
-        public async Task<IEnumerable<FornecedorViewModel>> ObterTodos()
+        public async Task<ActionResult<IEnumerable<FornecedorViewModel>>> ObterTodos()
         {
             var fornecedores = await _fornecedorRepository.ObterTodos();
-            return _mapper.Map<IEnumerable<FornecedorViewModel>>(fornecedores);
+            return CustonResponse(_mapper.Map<IEnumerable<FornecedorViewModel>>(fornecedores));
         }
 
         [HttpGet("{id:guid}")]
@@ -39,7 +44,7 @@ namespace Estudos.App.WebApi.Controllers
 
             if (fornecedor == null) return NotFound();
 
-            return Ok(fornecedor);
+            return CustonResponse(fornecedor);
 
         }
 
@@ -64,7 +69,7 @@ namespace Estudos.App.WebApi.Controllers
                 return CustonResponse();
             }
 
-            if (!ModelState.IsValid) return BadRequest();
+            if (!ModelState.IsValid) return CustonResponse(ModelState);
 
             var fornecedor = _mapper.Map<Fornecedor>(viewModel);
             await _fornecedorService.Atualizar(fornecedor);
@@ -86,6 +91,37 @@ namespace Estudos.App.WebApi.Controllers
             return CustonResponse(viewModel);
 
         }
+
+        [HttpGet("obter-endereco/{id:guid}")]
+        public async Task<ActionResult<FornecedorViewModel>> ObterEnderecoPorId(Guid id)
+        {
+            var fornecedor = await ObeterFornecedorProdutosEndereco(id);
+            if (fornecedor == null) return NotFound();
+
+            return CustonResponse(fornecedor);
+
+        }
+
+        [HttpPut("atualizar-endereco/{id:guid}")]
+        public async Task<ActionResult<FornecedorViewModel>> AtualizarEndereco(Guid id, EnderecoViewModel viewModel)
+        {
+            if (id != viewModel.Id)
+            {
+                NotificarErro("O id informado não é o mesmo passado na query");
+                return CustonResponse();
+            }
+
+            if (!ModelState.IsValid) return CustonResponse(ModelState);
+
+            var endereco = _mapper.Map<Endereco>(viewModel);
+            await _enderecoRepository.Atualizar(endereco);
+
+            return CustonResponse(viewModel);
+
+        }
+
+        #endregion
+
         #region private
 
         private async Task<FornecedorViewModel> ObeterFornecedorProdutosEndereco(Guid id)
