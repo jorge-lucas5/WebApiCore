@@ -6,6 +6,7 @@ using AutoMapper;
 using Estudos.App.Business.Interfaces;
 using Estudos.App.Business.Models;
 using Estudos.App.WebApi.ViewModels;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Estudos.App.WebApi.Controllers
@@ -64,6 +65,35 @@ namespace Estudos.App.WebApi.Controllers
         }
 
 
+        [HttpPost("Adicionar")]
+        public async Task<ActionResult<FornecedorViewModel>> AdicionarAlternativo([FromForm]ProdutoImagemViewModel viewModel)
+        {
+            if (!ModelState.IsValid) return CustonResponse(ModelState);
+
+            var imgPrefixo = Guid.NewGuid() + "_";
+            if (!await UploadArquivoAlternativo(viewModel.ImagemUpload, imgPrefixo))
+            {
+                return CustonResponse();
+            }
+
+            viewModel.Imagem = imgPrefixo + viewModel.ImagemUpload.FileName;
+            var produto = _mapper.Map<Produto>(viewModel);
+            await _produtoService.Adicionar(produto);
+            viewModel.Id = produto.Id;
+
+
+            return CustonResponse(viewModel);
+
+        }
+
+        [HttpPost("AdicionarImagem")]
+        //[DisableRequestSizeLimit]
+        [RequestSizeLimit(40000000)]
+        public async Task<ActionResult> AdicionarImagem(IFormFile file)
+        {
+            return CustonResponse(file);
+        }
+
         [HttpDelete("{id:guid}")]
         public async Task<ActionResult<FornecedorViewModel>> Excluir(Guid id)
         {
@@ -101,6 +131,27 @@ namespace Estudos.App.WebApi.Controllers
                 return false;
             }
             await System.IO.File.WriteAllBytesAsync(filePath, imagemDataByteArray);
+            return true;
+        }
+
+        private async Task<bool> UploadArquivoAlternativo(IFormFile arquivo, string imgPrefixo)
+        {
+            if (arquivo == null || arquivo.Length <= 0)
+            {
+                NotificarErro("Forneça uma imagem para esse produto");
+                return false;
+            }
+
+            imgPrefixo += arquivo.FileName;
+            var filePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/uploadImages", imgPrefixo);
+            if (System.IO.File.Exists(filePath))
+            {
+                NotificarErro("Já existem um arquivo com esse nome cadastrado!");
+                return false;
+            }
+
+            await using var stream = new FileStream(filePath, FileMode.Create);
+            await arquivo.CopyToAsync(stream);
             return true;
         }
 
