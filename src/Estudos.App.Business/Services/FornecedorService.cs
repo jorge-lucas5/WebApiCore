@@ -62,6 +62,12 @@ namespace Estudos.App.Business.Services
                 return;
             }
 
+            var endereco = await _enderecoRepository.ObeterEnderecoPorFornecedor(id);
+            if (endereco != null)
+            {
+                await _enderecoRepository.Remover(endereco.Id);
+            }
+
             await _fornecedorRepository.Remover(id);
         }
 
