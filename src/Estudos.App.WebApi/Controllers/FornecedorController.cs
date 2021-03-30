@@ -34,7 +34,7 @@ namespace Estudos.App.WebApi.Controllers
         public async Task<ActionResult<IEnumerable<FornecedorViewModel>>> ObterTodos()
         {
             var fornecedores = await _fornecedorRepository.ObterTodos();
-            return CustonResponse(_mapper.Map<IEnumerable<FornecedorViewModel>>(fornecedores));
+            return CustomResponse(_mapper.Map<IEnumerable<FornecedorViewModel>>(fornecedores));
         }
 
         [HttpGet("{id:guid}")]
@@ -44,19 +44,19 @@ namespace Estudos.App.WebApi.Controllers
 
             if (fornecedor == null) return NotFound();
 
-            return CustonResponse(fornecedor);
+            return CustomResponse(fornecedor);
 
         }
 
         [HttpPost]
         public async Task<ActionResult<FornecedorViewModel>> Adicionar(FornecedorViewModel viewModel)
         {
-            if (!ModelState.IsValid) return CustonResponse(ModelState);
+            if (!ModelState.IsValid) return CustomResponse(ModelState);
 
             var fornecedor = _mapper.Map<Fornecedor>(viewModel);
             await _fornecedorService.Adicionar(fornecedor);
 
-            return CustonResponse(_mapper.Map<FornecedorViewModel>(fornecedor));
+            return CustomResponse(_mapper.Map<FornecedorViewModel>(fornecedor));
 
         }
 
@@ -66,15 +66,15 @@ namespace Estudos.App.WebApi.Controllers
             if (id != viewModel.Id)
             {
                 NotificarErro("O id informado não é o mesmo passado na query");
-                return CustonResponse();
+                return CustomResponse();
             }
 
-            if (!ModelState.IsValid) return CustonResponse(ModelState);
+            if (!ModelState.IsValid) return CustomResponse(ModelState);
 
             var fornecedor = _mapper.Map<Fornecedor>(viewModel);
             await _fornecedorService.Atualizar(fornecedor);
 
-            return CustonResponse(viewModel);
+            return CustomResponse(viewModel);
 
         }
 
@@ -88,7 +88,7 @@ namespace Estudos.App.WebApi.Controllers
 
             var viewModel = _mapper.Map<FornecedorViewModel>(fornecedor);
 
-            return CustonResponse(viewModel);
+            return CustomResponse(viewModel);
 
         }
 
@@ -98,7 +98,7 @@ namespace Estudos.App.WebApi.Controllers
             var fornecedor = await ObeterFornecedorProdutosEndereco(id);
             if (fornecedor == null) return NotFound();
 
-            return CustonResponse(fornecedor);
+            return CustomResponse(fornecedor);
 
         }
 
@@ -108,15 +108,15 @@ namespace Estudos.App.WebApi.Controllers
             if (id != viewModel.Id)
             {
                 NotificarErro("O id informado não é o mesmo passado na query");
-                return CustonResponse();
+                return CustomResponse();
             }
 
-            if (!ModelState.IsValid) return CustonResponse(ModelState);
+            if (!ModelState.IsValid) return CustomResponse(ModelState);
 
             var endereco = _mapper.Map<Endereco>(viewModel);
             await _enderecoRepository.Atualizar(endereco);
 
-            return CustonResponse(viewModel);
+            return CustomResponse(viewModel);
 
         }
 

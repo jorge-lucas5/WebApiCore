@@ -31,7 +31,7 @@ namespace Estudos.App.WebApi.Controllers
         public async Task<ActionResult<IEnumerable<ProdutoViewModel>>> ObterTodos()
         {
             var produtos = await _produtoRepository.ObterProdutosFornecedores();
-            return CustonResponse(_mapper.Map<IEnumerable<ProdutoViewModel>>(produtos));
+            return CustomResponse(_mapper.Map<IEnumerable<ProdutoViewModel>>(produtos));
         }
 
         [HttpGet("{id:guid}")]
@@ -41,26 +41,26 @@ namespace Estudos.App.WebApi.Controllers
 
             if (produto == null) return NotFound();
 
-            return CustonResponse(produto);
+            return CustomResponse(produto);
 
         }
 
         [HttpPost]
         public async Task<ActionResult<FornecedorViewModel>> Adicionar(ProdutoViewModel viewModel)
         {
-            if (!ModelState.IsValid) return CustonResponse(ModelState);
+            if (!ModelState.IsValid) return CustomResponse(ModelState);
 
             var imgNome = Guid.NewGuid() + "_" + viewModel.Imagem;
             if (!await UploadArquivo(viewModel.ImagemUpload, imgNome))
             {
-                return CustonResponse();
+                return CustomResponse();
             }
 
             viewModel.Imagem = imgNome;
             var produto = _mapper.Map<Produto>(viewModel);
             await _produtoService.Adicionar(produto);
 
-            return CustonResponse(viewModel);
+            return CustomResponse(viewModel);
 
         }
 
@@ -68,12 +68,12 @@ namespace Estudos.App.WebApi.Controllers
         [HttpPost("Adicionar")]
         public async Task<ActionResult<FornecedorViewModel>> AdicionarAlternativo([FromForm]ProdutoImagemViewModel viewModel)
         {
-            if (!ModelState.IsValid) return CustonResponse(ModelState);
+            if (!ModelState.IsValid) return CustomResponse(ModelState);
 
             var imgPrefixo = Guid.NewGuid() + "_";
             if (!await UploadArquivoAlternativo(viewModel.ImagemUpload, imgPrefixo))
             {
-                return CustonResponse();
+                return CustomResponse();
             }
 
             viewModel.Imagem = imgPrefixo + viewModel.ImagemUpload.FileName;
@@ -82,7 +82,7 @@ namespace Estudos.App.WebApi.Controllers
             viewModel.Id = produto.Id;
 
 
-            return CustonResponse(viewModel);
+            return CustomResponse(viewModel);
 
         }
 
@@ -91,7 +91,45 @@ namespace Estudos.App.WebApi.Controllers
         [RequestSizeLimit(40000000)]
         public async Task<ActionResult> AdicionarImagem(IFormFile file)
         {
-            return CustonResponse(file);
+            return CustomResponse(file);
+        }
+
+        [HttpPut("{id:guid}")]
+        public async Task<IActionResult> Atualizar(Guid id, ProdutoViewModel produtoViewModel)
+        {
+            if (id != produtoViewModel.Id)
+            {
+                NotificarErro("Os ids informados não são iguais!");
+                return CustomResponse();
+            }
+
+            var produtoAtualizacao = await ObterProduto(id);
+
+            if (string.IsNullOrEmpty(produtoViewModel.Imagem))
+                produtoViewModel.Imagem = produtoAtualizacao.Imagem;
+
+            if (!ModelState.IsValid) return CustomResponse(ModelState);
+
+            if (produtoViewModel.ImagemUpload != null)
+            {
+                var imagemNome = Guid.NewGuid() + "_" + produtoViewModel.Imagem;
+                if (!await UploadArquivo(produtoViewModel.ImagemUpload, imagemNome))
+                {
+                    return CustomResponse(ModelState);
+                }
+
+                produtoAtualizacao.Imagem = imagemNome;
+            }
+
+            produtoAtualizacao.FornecedorId = produtoViewModel.FornecedorId;
+            produtoAtualizacao.Nome = produtoViewModel.Nome;
+            produtoAtualizacao.Descricao = produtoViewModel.Descricao;
+            produtoAtualizacao.Valor = produtoViewModel.Valor;
+            produtoAtualizacao.Ativo = produtoViewModel.Ativo;
+
+            await _produtoService.Atualizar(_mapper.Map<Produto>(produtoAtualizacao));
+
+            return CustomResponse(produtoViewModel);
         }
 
         [HttpDelete("{id:guid}")]
@@ -102,7 +140,7 @@ namespace Estudos.App.WebApi.Controllers
 
             await _produtoService.Remover(id);
 
-            return CustonResponse(produtoViewModel);
+            return CustomResponse(produtoViewModel);
 
         }
 

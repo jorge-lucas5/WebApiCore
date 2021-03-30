@@ -15,14 +15,14 @@ namespace Estudos.App.WebApi.Controllers
         {
             _notificador = notificador;
         }
-        protected ActionResult CustonResponse(ModelStateDictionary modelState)
+        protected ActionResult CustomResponse(ModelStateDictionary modelState)
         {
             if (!modelState.IsValid) NotificarErroModelInvalida(modelState);
 
-            return CustonResponse();
+            return CustomResponse();
         }
 
-        protected ActionResult CustonResponse(object result = null)
+        protected ActionResult CustomResponse(object result = null)
         {
             if (OperacaoValida())
             {
