@@ -12,7 +12,7 @@ namespace Estudos.App.Data.Repository
     public class ProdutoRepository : Repository<Produto>, IProdutoRepository
     {
         public ProdutoRepository(AppDbContext context) : base(context) { }
-        public async Task<Produto> ObeterProdutoFornecedor(Guid id)
+        public async Task<Produto> ObterProdutoFornecedor(Guid id)
         {
             return await Context.Produtos.AsNoTracking()
                 .Include(p => p.Fornecedor)
@@ -20,12 +20,12 @@ namespace Estudos.App.Data.Repository
 
         }
 
-        public async Task<IEnumerable<Produto>> ObeterProdutosPorFornecedor(Guid fonecedorId)
+        public async Task<IEnumerable<Produto>> ObterProdutosPorFornecedor(Guid fonecedorId)
         {
             return await Buscar(p => p.FornecedorId == fonecedorId);
         }
 
-        public async Task<IEnumerable<Produto>> ObeterProdutosFornecedores()
+        public async Task<IEnumerable<Produto>> ObterProdutosFornecedores()
         {
             return await Context.Produtos.AsNoTracking()
                 .Include(p => p.Fornecedor)

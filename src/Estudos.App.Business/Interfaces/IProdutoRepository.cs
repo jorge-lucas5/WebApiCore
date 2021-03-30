@@ -7,8 +7,8 @@ namespace Estudos.App.Business.Interfaces
 {
     public interface IProdutoRepository:IRepository<Produto>
     {
-        Task<IEnumerable<Produto>> ObeterProdutosPorFornecedor(Guid fonecedorId);
-        Task<IEnumerable<Produto>> ObeterProdutosFornecedores();
-        Task<Produto> ObeterProdutoFornecedor(Guid id);
+        Task<IEnumerable<Produto>> ObterProdutosPorFornecedor(Guid fonecedorId);
+        Task<IEnumerable<Produto>> ObterProdutosFornecedores();
+        Task<Produto> ObterProdutoFornecedor(Guid id);
     }
 }

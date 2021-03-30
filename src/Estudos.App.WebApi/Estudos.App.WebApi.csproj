@@ -17,5 +17,9 @@
     <ProjectReference Include="..\Estudos.App.Data\Estudos.App.Data.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="wwwroot\uploadImages\" />
+  </ItemGroup>
+
 
 </Project>
