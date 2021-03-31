@@ -38,8 +38,10 @@ namespace Estudos.App.WebApi.Configuration
             });
             app.UseHttpsRedirection();
             app.UseRouting();
-            app.UseAuthorization();
             
+            app.UseAuthentication();
+            app.UseAuthorization();
+
             return app;
         }
     }

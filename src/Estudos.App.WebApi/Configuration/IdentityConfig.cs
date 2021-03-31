@@ -17,6 +17,8 @@ namespace Estudos.App.WebApi.Configuration
             services.AddIdentity<IdentityUser, IdentityRole>()
                 .AddEntityFrameworkStores<ApplicationDbContext>()
                 .AddDefaultTokenProviders();
+
+
             return services;
         }
     }
