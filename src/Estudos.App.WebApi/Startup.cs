@@ -2,7 +2,6 @@ using Estudos.App.Data.Context;
 using Estudos.App.WebApi.Configuration;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -27,22 +26,7 @@ namespace Estudos.App.WebApi
             });
 
             services.AddAutoMapper(typeof(Startup));
-            services.AddControllers();
-
-            services.Configure<ApiBehaviorOptions>(opt =>
-            {
-                opt.SuppressModelStateInvalidFilter = true;
-            });
-
-            services.AddCors(opt =>
-            {
-                opt.AddPolicy("Development",
-                    builder => builder.AllowAnyOrigin()
-                                                  .AllowAnyMethod()
-                                                  .AllowAnyHeader()
-                                                  );
-            });
-
+            services.WebApiConfig();
             services.ResolveDependecies();
         }
 
@@ -52,19 +36,11 @@ namespace Estudos.App.WebApi
             {
                 app.UseDeveloperExceptionPage();
             }
-
-            app.UseHttpsRedirection();
-
-            app.UseRouting();
-
-            app.UseAuthorization();
-
-            app.UseCors("Development");
-
-            app.UseEndpoints(endpoints =>
+            else
             {
-                endpoints.MapControllers();
-            });
+                app.UseHsts();
+            }
+            app.UseMvcConfiguration();
         }
     }
 }
