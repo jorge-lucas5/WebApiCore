@@ -25,6 +25,8 @@ namespace Estudos.App.WebApi
                 opt.UseSqlServer(Configuration.GetConnectionString("WebApiDbConnection"));
             });
 
+            services.AddIdentityConfiguration(Configuration);
+
             services.AddAutoMapper(typeof(Startup));
             services.WebApiConfig();
             services.ResolveDependecies();
