@@ -14,6 +14,19 @@ namespace Estudos.App.WebApi.Configuration
 
             services.AddControllers();
 
+            services.AddApiVersioning(opt =>
+            {
+                opt.AssumeDefaultVersionWhenUnspecified = true;
+                opt.DefaultApiVersion = new ApiVersion(1, 0);
+                opt.ReportApiVersions = true;// informa se para o cliente se ele esta consumindo uma api obsoleta
+            });
+
+            services.AddVersionedApiExplorer(options =>
+            {
+                options.GroupNameFormat = "'v'VVV";
+                options.SubstituteApiVersionInUrl = true;
+            });
+
             //desabilitando a verificação automática do modelState
             services.Configure<ApiBehaviorOptions>(opt =>
             {

@@ -12,7 +12,8 @@ using Microsoft.AspNetCore.Mvc;
 namespace Estudos.App.WebApi.Controllers
 {
     [Authorize]
-    [Route("api/[controller]")]
+    [ApiVersion("1.0")]
+    [Route("api/v{version:apiVersion}/[controller]")]
     public class FornecedorController : MainController
     {
         private readonly IFornecedorRepository _fornecedorRepository;
