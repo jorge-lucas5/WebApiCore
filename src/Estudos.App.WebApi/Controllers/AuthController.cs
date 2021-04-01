@@ -16,7 +16,8 @@ using JwtRegisteredClaimNames = Microsoft.IdentityModel.JsonWebTokens.JwtRegiste
 
 namespace Estudos.App.WebApi.Controllers
 {
-    [Route("api/conta")]
+    [ApiVersion("1.0")]
+    [Route("api/v{version:apiVersion}/conta")]
     public class AuthController : MainController
     {
         private readonly SignInManager<IdentityUser> _signInManager;

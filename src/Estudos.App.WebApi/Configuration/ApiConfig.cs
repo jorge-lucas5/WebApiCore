@@ -14,6 +14,8 @@ namespace Estudos.App.WebApi.Configuration
 
             services.AddControllers();
 
+            #region versionamento
+
             services.AddApiVersioning(opt =>
             {
                 opt.AssumeDefaultVersionWhenUnspecified = true;
@@ -27,11 +29,16 @@ namespace Estudos.App.WebApi.Configuration
                 options.SubstituteApiVersionInUrl = true;
             });
 
+            #endregion
+
+
             //desabilitando a verificação automática do modelState
             services.Configure<ApiBehaviorOptions>(opt =>
             {
                 opt.SuppressModelStateInvalidFilter = true;
             });
+
+            #region Cosrs
 
             services.AddCors(opt =>
             {
@@ -50,6 +57,9 @@ namespace Estudos.App.WebApi.Configuration
                             //.WithHeaders(HeaderNames.ContentType, "x-custom-header") // caso queira aceitar de header especificos
                             .AllowAnyHeader());
             });
+
+            #endregion
+
 
             return services;
         }

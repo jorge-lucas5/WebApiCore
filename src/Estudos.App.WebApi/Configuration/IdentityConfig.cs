@@ -15,6 +15,8 @@ namespace Estudos.App.WebApi.Configuration
     {
         public static IServiceCollection AddIdentityConfiguration(this IServiceCollection services, IConfiguration configuration)
         {
+            #region Identity
+
             services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseSqlServer(configuration.GetConnectionString("WebApiDbConnection")));
 
@@ -23,7 +25,9 @@ namespace Estudos.App.WebApi.Configuration
                 .AddErrorDescriber<IdentityMensagensPortugues>()
                 .AddDefaultTokenProviders();
 
-            // JWT
+            #endregion
+
+            #region JWT
 
             var appSettingsSection = configuration.GetSection("AppSettings");
             services.Configure<AppSettings>(appSettingsSection);
@@ -53,6 +57,9 @@ namespace Estudos.App.WebApi.Configuration
                     ValidIssuer = appSettings.Emissor
                 };
             });
+
+            #endregion
+
 
             return services;
         }
