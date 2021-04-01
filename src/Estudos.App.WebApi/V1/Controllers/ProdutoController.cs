@@ -5,12 +5,13 @@ using System.Threading.Tasks;
 using AutoMapper;
 using Estudos.App.Business.Interfaces;
 using Estudos.App.Business.Models;
+using Estudos.App.WebApi.Controllers;
 using Estudos.App.WebApi.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
-namespace Estudos.App.WebApi.Controllers
+namespace Estudos.App.WebApi.V1.Controllers
 {
     [Authorize]
     [ApiVersion("1.0")]

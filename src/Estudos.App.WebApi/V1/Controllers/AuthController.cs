@@ -5,16 +5,16 @@ using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
 using Estudos.App.Business.Interfaces;
+using Estudos.App.WebApi.Controllers;
 using Estudos.App.WebApi.Extensions;
 using Estudos.App.WebApi.ViewModels;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
-using Microsoft.IdentityModel.JsonWebTokens;
 using Microsoft.IdentityModel.Tokens;
 using JwtRegisteredClaimNames = Microsoft.IdentityModel.JsonWebTokens.JwtRegisteredClaimNames;
 
-namespace Estudos.App.WebApi.Controllers
+namespace Estudos.App.WebApi.V1.Controllers
 {
     [ApiVersion("1.0")]
     [Route("api/v{version:apiVersion}/conta")]
