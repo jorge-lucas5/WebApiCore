@@ -85,8 +85,9 @@ namespace Estudos.App.WebApi.Controllers
 
         #region privates
 
-        private string GerarJwt()
+        private async Task<LoginResponseViewModel> GerarJwt(string email)
         {
+            var user = await _userManager.FindByEmailAsync(email);
             var tokenHandler = new JwtSecurityTokenHandler();
             var key = Encoding.ASCII.GetBytes(_appSettings.Secret);
 
@@ -99,11 +100,21 @@ namespace Estudos.App.WebApi.Controllers
             });
 
             var encodedToken = tokenHandler.WriteToken(token);
-            return encodedToken;
+            var response = new LoginResponseViewModel
+            {
+                AccessToken = encodedToken,
+                ExpiresIn = TimeSpan.FromHours(_appSettings.ExpiracaoHoras).TotalSeconds,
+                UserData = new UserTokenViewModel
+                {
+                    Id = user.Id,
+                    Email = user.Email
+                }
+            };
+            return response;
         }
 
 
-        private async Task<string> GerarJwtClaim(string email)
+        private async Task<LoginResponseViewModel> GerarJwtClaim(string email)
         {
             var user = await _userManager.FindByEmailAsync(email);
             var claims = await _userManager.GetClaimsAsync(user);
@@ -112,7 +123,7 @@ namespace Estudos.App.WebApi.Controllers
             var a = ToUnixEpochDate(DateTime.UtcNow).ToString();
             var b = Teste(DateTime.UtcNow).ToString();
 
-            roles.ToList().ForEach(r=> claims.Add(new Claim("role",r)));
+            roles.ToList().ForEach(r => claims.Add(new Claim("role", r)));
 
             claims.Add(new Claim(JwtRegisteredClaimNames.Sub, user.Id));
             claims.Add(new Claim(JwtRegisteredClaimNames.Email, user.Email));
@@ -137,7 +148,19 @@ namespace Estudos.App.WebApi.Controllers
             });
 
             var encodedToken = tokenHandler.WriteToken(token);
-            return encodedToken;
+
+            var response = new LoginResponseViewModel
+            {
+                AccessToken = encodedToken,
+                ExpiresIn = TimeSpan.FromHours(_appSettings.ExpiracaoHoras).TotalSeconds,
+                UserData = new UserTokenViewModel
+                {
+                    Id = user.Id,
+                    Email = user.Email,
+                    Claims = claims.Select(c=> new ClaimViewModel{Type = c.Type, Value = c.Value})
+                }
+            };
+            return response;
         }
 
         private static long ToUnixEpochDate(DateTime date) =>
@@ -146,7 +169,7 @@ namespace Estudos.App.WebApi.Controllers
 
         private long Teste(DateTime time)
         {
-            return (long) Math.Round((decimal) new DateTimeOffset(time).ToUnixTimeSeconds());
+            return (long)Math.Round((decimal)new DateTimeOffset(time).ToUnixTimeSeconds());
         }
 
         #endregion
