@@ -1,6 +1,9 @@
 ﻿using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
+using Microsoft.Net.Http.Headers;
 
 namespace Estudos.App.WebApi.Configuration
 {
@@ -24,16 +27,34 @@ namespace Estudos.App.WebApi.Configuration
                         builder.AllowAnyOrigin()
                             .AllowAnyMethod()
                             .AllowAnyHeader());
+
+                opt.AddPolicy("Production",
+                    builder =>
+                        builder
+                            .WithMethods("GET") //métodos permitidos
+                            .WithOrigins("http://meusite.com.br") //site permitido a realizar requests
+                            .SetIsOriginAllowedToAllowWildcardSubdomains()// permitindo subdominios
+                            //.WithHeaders(HeaderNames.ContentType, "x-custom-header") // caso queira aceitar de header especificos
+                            .AllowAnyHeader());
             });
 
             return services;
         }
 
-        public static IApplicationBuilder UseMvcConfiguration(this IApplicationBuilder app)
+        public static IApplicationBuilder UseMvcConfiguration(this IApplicationBuilder app, IWebHostEnvironment env)
         {
-            app.UseCors("Development");
-           
             app.UseHttpsRedirection();
+
+            if (env.IsDevelopment())
+            {
+                app.UseCors("Development");
+                app.UseDeveloperExceptionPage();
+            }
+            else
+            {
+                app.UseCors("Development"); // Usar apenas nas demos => Configuração Ideal: Production
+                app.UseHsts();
+            }
             app.UseRouting();
             
             app.UseAuthentication();

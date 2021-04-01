@@ -22,7 +22,8 @@ namespace Estudos.App.WebApi.Controllers
         public ProdutoController(INotificador notificador,
                                 IProdutoService produtoService,
                                 IProdutoRepository produtoRepository,
-                                IMapper mapper) : base(notificador)
+                                IMapper mapper,
+                                IUser user) : base(notificador, user)
         {
             _produtoService = produtoService;
             _produtoRepository = produtoRepository;
