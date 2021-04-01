@@ -37,7 +37,7 @@ namespace Estudos.App.WebApi.Configuration
             app.UseRouting();
             
             app.UseAuthentication();
-            //app.UseAuthorization();
+            app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
             {
