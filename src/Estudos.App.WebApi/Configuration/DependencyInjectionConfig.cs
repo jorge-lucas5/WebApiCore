@@ -3,6 +3,8 @@ using Estudos.App.Business.Notificacoes;
 using Estudos.App.Business.Services;
 using Estudos.App.Data.Context;
 using Estudos.App.Data.Repository;
+using Estudos.App.WebApi.Extensions;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Estudos.App.WebApi.Configuration
@@ -19,6 +21,9 @@ namespace Estudos.App.WebApi.Configuration
             services.AddScoped<INotificador, Notificador>();
             services.AddScoped<IFornecedorService, FornecedorService>();
             services.AddScoped<IProdutoService, ProdutoService>();
+
+            services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+            services.AddScoped<IUser, AspNetUser>();
             
             return services;
         }
