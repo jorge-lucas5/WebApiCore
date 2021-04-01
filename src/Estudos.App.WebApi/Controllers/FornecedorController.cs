@@ -5,10 +5,12 @@ using AutoMapper;
 using Estudos.App.Business.Interfaces;
 using Estudos.App.Business.Models;
 using Estudos.App.WebApi.ViewModels;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Estudos.App.WebApi.Controllers
 {
+    [Authorize]
     [Route("api/[controller]")]
     public class FornecedorController : MainController
     {
@@ -30,6 +32,7 @@ namespace Estudos.App.WebApi.Controllers
 
         #region verbos
 
+        [AllowAnonymous]
         [HttpGet]
         public async Task<ActionResult<IEnumerable<FornecedorViewModel>>> ObterTodos()
         {

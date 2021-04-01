@@ -6,11 +6,13 @@ using AutoMapper;
 using Estudos.App.Business.Interfaces;
 using Estudos.App.Business.Models;
 using Estudos.App.WebApi.ViewModels;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Estudos.App.WebApi.Controllers
 {
+    [Authorize]
     [Route("api/[controller]")]
     public class ProdutoController : MainController
     {
@@ -27,6 +29,7 @@ namespace Estudos.App.WebApi.Controllers
             _mapper = mapper;
         }
 
+        [AllowAnonymous]
         [HttpGet]
         public async Task<ActionResult<IEnumerable<ProdutoViewModel>>> ObterTodos()
         {
