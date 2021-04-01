@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using AutoMapper;
 using Estudos.App.Business.Interfaces;
 using Estudos.App.Business.Models;
+using Estudos.App.WebApi.Extensions;
 using Estudos.App.WebApi.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -51,6 +52,7 @@ namespace Estudos.App.WebApi.Controllers
 
         }
 
+        [ClaimsAuthorize("Fornecedor", "Adicionar")]
         [HttpPost]
         public async Task<ActionResult<FornecedorViewModel>> Adicionar(FornecedorViewModel viewModel)
         {
@@ -63,6 +65,7 @@ namespace Estudos.App.WebApi.Controllers
 
         }
 
+        [ClaimsAuthorize("Fornecedor", "Atualizar")]
         [HttpPut("{id:guid}")]
         public async Task<ActionResult<FornecedorViewModel>> Atualizar(Guid id, FornecedorViewModel viewModel)
         {
@@ -81,6 +84,7 @@ namespace Estudos.App.WebApi.Controllers
 
         }
 
+        [ClaimsAuthorize("Fornecedor", "Excluir")]
         [HttpDelete("{id:guid}")]
         public async Task<ActionResult<FornecedorViewModel>> Excluir(Guid id)
         {
@@ -105,6 +109,7 @@ namespace Estudos.App.WebApi.Controllers
 
         }
 
+        [ClaimsAuthorize("Fornecedor", "Atualizar")]
         [HttpPut("atualizar-endereco/{id:guid}")]
         public async Task<ActionResult<FornecedorViewModel>> AtualizarEndereco(Guid id, EnderecoViewModel viewModel)
         {
