@@ -6,6 +6,8 @@ using Estudos.App.Data.Repository;
 using Estudos.App.WebApi.Extensions;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Options;
+using Swashbuckle.AspNetCore.SwaggerGen;
 
 namespace Estudos.App.WebApi.Configuration
 {
@@ -24,7 +26,9 @@ namespace Estudos.App.WebApi.Configuration
 
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
             services.AddScoped<IUser, AspNetUser>();
-            
+
+            services.AddTransient<IConfigureOptions<SwaggerGenOptions>, ConfigureSwaggerOptions>();
+
             return services;
         }
     }
