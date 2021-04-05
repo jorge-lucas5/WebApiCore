@@ -12,6 +12,7 @@ namespace Estudos.App.WebApi.V2.Controllers
         {
         }
 
+        [HttpGet]
         public ActionResult<string> Valor()
         {
             return CustomResponse("Api v2");
