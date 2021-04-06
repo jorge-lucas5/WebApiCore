@@ -4,7 +4,9 @@ using System.Collections.Generic;
 using System.Net;
 using System.Text.Json;
 using System.Threading.Tasks;
+using Elmah.Io.AspNetCore;
 using Estudos.App.WebApi.Extensions;
+using Microsoft.Extensions.Logging;
 
 
 namespace Estudos.App.WebApi.Configuration.Middleware
@@ -12,13 +14,15 @@ namespace Estudos.App.WebApi.Configuration.Middleware
     public class ErrorHandlerMiddleware
     {
         private readonly RequestDelegate _next;
+        private readonly ILogger _logger;
 
-        public ErrorHandlerMiddleware(RequestDelegate next)
+        public ErrorHandlerMiddleware(RequestDelegate next, ILogger<ErrorHandlerMiddleware> logger)
         {
             _next = next;
+            _logger = logger;
         }
 
-        public async Task Invoke(HttpContext context)
+        public async Task InvokeAsync(HttpContext context)
         {
             try
             {
@@ -44,7 +48,8 @@ namespace Estudos.App.WebApi.Configuration.Middleware
                         response.StatusCode = (int)HttpStatusCode.InternalServerError;
                         break;
                 }
-
+                //_logger.LogCritical(error,"");
+               error.Ship(context);
                 //var result = JsonSerializer.Serialize(new { message = error?.Message });
                 var result = JsonSerializer.Serialize(new { sucesso = false, data = error?.Message });
                 await response.WriteAsync(result);

@@ -32,6 +32,7 @@ namespace Estudos.App.WebApi
 
             services.AddSwaggerConfig();
 
+            services.AddLogginConfig();
             services.ResolveDependecies();
         }
 
@@ -40,6 +41,8 @@ namespace Estudos.App.WebApi
             app.UseSwaggerConfig(provider);
 
             app.UseMvcConfiguration(env);
+
+            app.UseLogginConfig();
         }
     }
 }
