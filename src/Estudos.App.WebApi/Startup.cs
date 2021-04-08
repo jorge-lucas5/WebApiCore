@@ -1,11 +1,16 @@
+using System;
+using System.IO;
 using Estudos.App.Data.Context;
 using Estudos.App.WebApi.Configuration;
+using Estudos.App.WebApi.Extensions;
+using HealthChecks.UI.Core.Data;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.ApiExplorer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 
 namespace Estudos.App.WebApi
 {
@@ -32,7 +37,9 @@ namespace Estudos.App.WebApi
 
             services.AddSwaggerConfig();
 
-            services.AddLogginConfig();
+            services.AddLogginConfig(Configuration);
+
+          
             services.ResolveDependecies();
         }
 

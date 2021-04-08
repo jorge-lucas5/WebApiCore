@@ -1,5 +1,7 @@
 ﻿using Estudos.App.WebApi.Configuration.Middleware;
+using HealthChecks.UI.Client;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.DependencyInjection;
@@ -55,13 +57,13 @@ namespace Estudos.App.WebApi.Configuration
                             .WithMethods("GET") //métodos permitidos
                             .WithOrigins("http://meusite.com.br") //site permitido a realizar requests
                             .SetIsOriginAllowedToAllowWildcardSubdomains()// permitindo subdominios
-                            //.WithHeaders(HeaderNames.ContentType, "x-custom-header") // caso queira aceitar de header especificos
+                                                                          //.WithHeaders(HeaderNames.ContentType, "x-custom-header") // caso queira aceitar de header especificos
                             .AllowAnyHeader());
             });
 
             #endregion
 
-
+            
             return services;
         }
 
@@ -80,17 +82,40 @@ namespace Estudos.App.WebApi.Configuration
                 app.UseHsts();
             }
             app.UseRouting();
-            
+
             app.UseAuthentication();
             app.UseAuthorization();
 
-            app.UseMiddleware<ErrorHandlerMiddleware>();
+            //app.UseMiddleware<ErrorHandlerMiddleware>();
 
+            
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
-            });
+                endpoints.MapHealthChecks("/api/hc", new HealthCheckOptions()
+                {
+                    Predicate = _ => true,
+                    ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse
+                });
+                endpoints.MapHealthChecksUI(options =>
+                {
+                    options.UIPath = "/api/hc-ui";
+                    options.ResourcesPath = "/api/hc-ui-resources";
 
+
+                    options.UseRelativeApiPath = false;
+                    options.UseRelativeResourcesPath = false;
+                    options.UseRelativeWebhookPath = false;
+                });
+
+            });
+            app.UseHealthChecksUI();
+
+            //app.UseHealthChecks("/api/hc");
+            //app.UseHealthChecksUI(opt =>
+            //{
+            //    opt.UIPath = "/api/hc-ui";
+            //});
             return app;
         }
     }
